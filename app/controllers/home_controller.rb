@@ -4,7 +4,14 @@
 class HomeController < ApplicationController
   skip_before_action :verify_authenticity_token
   def calc
-    arr = params[:arr]
+    arr_str = params[:arr]
+    unless /^(\d+ ?)+$/.match? arr_str
+      return render json: {
+        error: 'Строка должна состоять из положительных чисел и пробелов'
+      }
+    end
+    p arr_str
+    arr = arr_str.split(' ').map(&:to_i)
     distances = find_distances(arr)
     render json: { distances: distances, maxDistance: distances.max { |a, b| a.length <=> b.length } }
   end
@@ -12,10 +19,9 @@ class HomeController < ApplicationController
   def find_distances(arr)
     arr
       .map { |i| po5?(i) ? i : 0 }
-      .reduce([0, []]) { |obj, i| i.zero? ? [obj[0] + 1, obj[1]] : [obj[0], obj[1].push([obj[0], i])] }[1]
-      .group_by { |i| i[0] }
-      .values
-      .map { |i| i.map { |j| j[1] } }
+      .slice_when { |i, j| po5?(i) != po5?(j) }
+      .to_a
+      .reject { |i| i.include? 0 }
   end
 
   def po5?(num)

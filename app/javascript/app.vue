@@ -18,20 +18,19 @@ export default {
     }
   },
   methods: {
-    onFormSubmit(data) {
-      this.initial = data;
+    onFormSubmit(s) {
       fetch('/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({arr: s})
       })
         .then((res) => res.text())
         .then((text) => {
           const json = JSON.parse(text);
+          if (json.error) return alert(json.error);
+
+          this.initial = s;
           this.distances = json.distances;
-          console.log(json)
           this.maxDistance = json.maxDistance
         })
     }
