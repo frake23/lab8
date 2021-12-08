@@ -1,5 +1,10 @@
 <template>
   <div class="container my-4">
+    <div class="d-flex justify-content-end mb-4">
+      <button class="btn btn-danger" v-on:click="onHistoryShow">История</button>
+    </div>
+    <history-view :results="results" v-if="showHistory"/>
+
     <main-form :on-form-submit="onFormSubmit"/>
     <distances-view :distances="distances" :max-distance="maxDistance" v-if="distances" :initial="initial"/>
   </div>
@@ -8,13 +13,17 @@
 <script>
 import MainForm from "./components/MainForm";
 import DistancesView from "./components/DistancesView";
+import HistoryView from "./components/HistoryView";
+
 export default {
-  components: {DistancesView, MainForm},
+  components: {HistoryView, DistancesView, MainForm},
   data: () => {
     return {
       distances: null,
       maxDistance: null,
-      initial: null
+      initial: null,
+      showHistory: false,
+      results: []
     }
   },
   methods: {
@@ -30,10 +39,25 @@ export default {
           if (json.error) return alert(json.error);
 
           this.initial = s;
-          this.distances = json.distances;
-          this.maxDistance = json.maxDistance
+          this.distances = json.distances.map(i => i.distance);
+          this.maxDistance = json['max_distance']
         })
+        .then(() => this.fetchHistory())
+    },
+    onHistoryShow() {
+      this.showHistory = !this.showHistory;
+      console.log(this.results)
+    },
+    fetchHistory() {
+      fetch('/history')
+          .then(res => res.text())
+          .then(text => {
+            this.results = JSON.parse(text);
+          })
     }
+  },
+  mounted() {
+    this.fetchHistory();
   }
 }
 </script>

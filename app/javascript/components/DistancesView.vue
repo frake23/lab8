@@ -10,14 +10,14 @@
       <h2>
         Все отрезки
       </h2>
-      <h4 v-for="(distance, i) in allDistances" class="alert alert-primary" :id="`distance-${i}`">
+      <h4 v-for="(distance, i) in distances" class="alert alert-primary" :id="`distance-${i}`">
         {{distance}}
       </h4>
       <h2>
         Самый длинный отрезок
       </h2>
       <h4 class="alert alert-primary" id="maxDistance">
-        {{maxDistanceStr}}
+        {{maxDistance}}
       </h4>
     </div>
     <h4 v-else class="alert alert-warning" id="error">
@@ -31,14 +31,6 @@
 export default {
   name: "DistancesView",
   props: ["distances", "maxDistance", "initial"],
-  computed: {
-    allDistances() {
-      return this.distances.map(dis => dis.join(' '));
-    },
-    maxDistanceStr() {
-      return this.maxDistance.join(' ')
-    }
-  }
 }
 </script>
 
