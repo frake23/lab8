@@ -1,6 +1,7 @@
 class Result < ApplicationRecord
   validates :input,
-            format: { with: /\A(\d+ ?)+\z/, message: 'Строка должна состоять из положительных чисел и пробелов' }
+            format: { with: /\A(\d+ ?)+\z/, message: 'Строка должна состоять из положительных чисел и пробелов' },
+            uniqueness: true
   has_many :distances
 
   def attributes

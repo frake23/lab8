@@ -12,7 +12,7 @@ class HomeController < ApplicationController
     result = Result.find_by(input: arr_str)
     if result.nil?
       result = Result.new(input: arr_str)
-      return render json: { error: result.errors.objects.first.full_message } if result.invalid?
+      return render json: { error: result.errors.objects.first.message } if result.invalid?
 
       arr = arr_str.split(' ').map(&:to_i)
       distances = Sequence.find_distances(arr)
