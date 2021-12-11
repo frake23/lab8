@@ -17,7 +17,7 @@ class HomeController < ApplicationController
       arr = arr_str.split(' ').map(&:to_i)
       distances = Sequence.find_distances(arr)
       p distances
-      result.max_distance = distances.max&.join(' ')
+      result.max_distance = distances.max{|a, b| a.length<=> b.length}&.join(' ')
       result.save
       result.distances.create(distances.map { |i| { distance: i.join(' ') } })
     end

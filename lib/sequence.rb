@@ -5,7 +5,6 @@ module Sequence
       .slice_when { |i, j| po5?(i) != po5?(j) }
       .to_a
       .reject { |i| i.include? 0 }
-      .define_singleton_method :max, ->(x) { x.max { |a, b| a.length <=> b.length } }
   end
 
   def po5?(num)
